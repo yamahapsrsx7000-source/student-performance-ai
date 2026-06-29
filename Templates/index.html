@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Student Performance Predictor</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+body{
+font-family:Arial;
+background:linear-gradient(to right,#7F7FD5,#86A8E7,#91EAE4);
+margin:0;
+padding:30px;
+}
+
+.container{
+
+width:700px;
+margin:auto;
+background:white;
+padding:30px;
+border-radius:20px;
+box-shadow:0 0 20px rgba(0,0,0,.2);
+
+}
+
+h1{
+
+text-align:center;
+color:#2c3e50;
+
+}
+
+input{
+
+width:100%;
+padding:12px;
+margin:8px 0;
+font-size:18px;
+border-radius:8px;
+border:1px solid gray;
+
+}
+
+button{
+
+width:100%;
+padding:15px;
+font-size:20px;
+background:#3498db;
+color:white;
+border:none;
+border-radius:10px;
+cursor:pointer;
+
+}
+
+button:hover{
+
+background:#2980b9;
+
+}
+
+.progress{
+
+width:100%;
+height:30px;
+background:#ddd;
+border-radius:20px;
+overflow:hidden;
+
+}
+
+.progress-bar{
+
+height:100%;
+background:linear-gradient(to right,#00b09b,#96c93d);
+text-align:center;
+color:white;
+line-height:30px;
+font-weight:bold;
+
+}
+
+.card{
+
+background:#f8f9fa;
+padding:20px;
+border-radius:15px;
+margin-top:20px;
+
+}
+
+.grade{
+
+font-size:35px;
+text-align:center;
+color:#27ae60;
+font-weight:bold;
+
+}
+
+ul{
+
+font-size:18px;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🎓 AI Student Performance Predictor</h1>
+
+<form action="/predict" method="POST">
+
+<label>📚 Study Hours</label>
+<input type="number" name="study_hours" required>
+
+<label>🏫 Attendance (%)</label>
+<input type="number" name="attendance" required>
+
+<label>📝 Previous Marks</label>
+<input type="number" name="previous_marks" required>
+
+<label>😴 Sleep Hours</label>
+<input type="number" name="sleep_hours" required>
+
+<button type="submit">Predict My Marks</button>
+
+</form>
+
+{% if prediction %}
+
+<hr>
+
+<h2 align="center">Predicted Marks : {{prediction}}%</h2>
+
+<div class="progress">
+
+<div class="progress-bar" style="width:{{prediction}}%;">
+
+{{prediction}}%
+
+</div>
+
+</div>
+
+<div class="grade">
+
+Grade :
+{% if prediction>=90 %}
+A+
+{% elif prediction>=80 %}
+A
+{% elif prediction>=70 %}
+B
+{% elif prediction>=60 %}
+C
+{% else %}
+D
+{% endif %}
+
+</div>
+
+<div class="card">
+
+<h2>📊 Student Performance</h2>
+
+<p>📚 Study Hours : {{study_hours}}</p>
+
+<progress value="{{study_hours}}" max="10" style="width:100%"></progress>
+
+<p>🏫 Attendance : {{attendance}}%</p>
+
+<progress value="{{attendance}}" max="100" style="width:100%"></progress>
+
+<p>📝 Previous Marks : {{previous_marks}}</p>
+
+<progress value="{{previous_marks}}" max="100" style="width:100%"></progress>
+
+<p>😴 Sleep Hours : {{sleep_hours}}</p>
+
+<progress value="{{sleep_hours}}" max="10" style="width:100%"></progress>
+
+</div>
+
+<div class="card">
+
+<h2>💡 AI Suggestions</h2>
+
+<ul>
+
+{% for s in suggestions %}
+
+<li>{{s}}</li>
+
+{% endfor %}
+
+</ul>
+
+</div>
+
+<div class="card">
+
+<h2 align="center">📈 Student Analysis</h2>
+
+<canvas id="myChart"></canvas>
+
+</div>
+
+<script>
+
+new Chart(document.getElementById("myChart"),{
+
+type:'bar',
+
+data:{
+
+labels:['Study Hours','Attendance','Previous Marks','Sleep Hours'],
+
+datasets:[{
+
+label:'Student Performance',
+
+data:[
+{{study_hours}},
+{{attendance}},
+{{previous_marks}},
+{{sleep_hours}}
+]
+
+}]
+
+}
+
+});
+
+</script>
+
+{% endif %}
+
+</div>
+
+</body>
+
+</html>
